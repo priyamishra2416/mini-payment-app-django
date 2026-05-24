@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="glass-card p-4 p-lg-5">
+    <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3 mb-4">
+        <div>
+            <span class="eyebrow">Transaction history</span>
+            <h1 class="display-6 fw-bold mt-2 mb-0">Sent and received activity</h1>
+        </div>
+        <a href="{% url 'send_money' %}" class="btn btn-primary">New Transfer</a>
+    </div>
+
+    <form method="get" class="row g-3 mb-4 history-filter-panel">
+        <div class="col-lg-5">
+            <label class="form-label">Search</label>
+            {{ search_form.query }}
+        </div>
+        <div class="col-lg-3">
+            <label class="form-label">Direction</label>
+            {{ search_form.direction }}
+        </div>
+        <div class="col-lg-3">
+            <label class="form-label">Status</label>
+            {{ search_form.status }}
+        </div>
+        <div class="col-lg-1 d-flex align-items-end">
+            <button type="submit" class="btn btn-glow w-100">Go</button>
+        </div>
+    </form>
+
+    <div class="history-summary mb-4">
+        <div><span>Query</span><strong>{{ current_query|default:'All' }}</strong></div>
+        <div><span>Direction</span><strong>{{ current_direction|title }}</strong></div>
+        <div><span>Status</span><strong>{{ current_status|title }}</strong></div>
+    </div>
+
+    <ul class="nav nav-pills gap-2 mb-4" id="historyTabs" role="tablist">
+        <li class="nav-item" role="presentation"><button class="nav-link active" data-bs-toggle="pill" data-bs-target="#all" type="button">All</button></li>
+        <li class="nav-item" role="presentation"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#sent" type="button">Sent</button></li>
+        <li class="nav-item" role="presentation"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#received" type="button">Received</button></li>
+    </ul>
+
+    <div class="tab-content">
+        <div class="tab-pane fade show active" id="all">
+            {% include 'partials/transaction_table.html' with transactions=all_transactions type='all' %}
+        </div>
+        <div class="tab-pane fade" id="sent">
+            {% include 'partials/transaction_table.html' with transactions=sent_transactions type='sent' %}
+        </div>
+        <div class="tab-pane fade" id="received">
+            {% include 'partials/transaction_table.html' with transactions=received_transactions type='received' %}
+        </div>
+    </div>
+</div>
+{% endblock %}

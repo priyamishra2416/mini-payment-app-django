@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row g-4">
+    <div class="col-lg-4">
+        <div class="glass-panel profile-hero animated-card p-4 p-lg-5 h-100 text-center">
+            <div class="profile-avatar mx-auto mb-3">{{ user.username|slice:":1"|upper }}</div>
+            <h1 class="hero-title mb-1">{{ user.get_full_name|default:user.username }}</h1>
+            <p class="text-muted-light mb-3">Joined {{ user.date_joined|date:"M d, Y" }}</p>
+            <div class="profile-badge">PocketPay Member</div>
+            <div class="profile-mini-stats mt-4">
+                <div><span>Total Transactions</span><strong>{{ total_transactions }}</strong></div>
+                <div><span>Wallet Balance</span><strong>{{ wallet.balance }}</strong></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-8">
+        <div class="glass-panel profile-details animated-card p-4 p-lg-5 h-100">
+            <span class="eyebrow">Profile</span>
+            <h2 class="panel-title mt-3 mb-4">Your PocketPay account</h2>
+            <div class="profile-grid premium-grid">
+                <div><span class="profile-label">Username</span><div class="profile-value">{{ user.username }}</div></div>
+                <div><span class="profile-label">Email</span><div class="profile-value">{{ user.email|default:'Not set' }}</div></div>
+                <div><span class="profile-label">Wallet Balance</span><div class="profile-value">{{ wallet.balance }}</div></div>
+                <div><span class="profile-label">Wallet Created</span><div class="profile-value">{{ wallet.created_at|date:"M d, Y H:i" }}</div></div>
+                <div><span class="profile-label">Joined Date</span><div class="profile-value">{{ user.date_joined|date:"M d, Y H:i" }}</div></div>
+                <div><span class="profile-label">Transactions</span><div class="profile-value">{{ total_transactions }}</div></div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

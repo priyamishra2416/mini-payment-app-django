@@ -1,0 +1,147 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="dashboard-shell">
+    <section class="glass-panel dashboard-hero animated-card p-4 p-lg-5 mb-4">
+        <div class="d-flex flex-column flex-lg-row justify-content-between align-items-start align-items-lg-center gap-3">
+            <div>
+                <span class="eyebrow">Welcome back</span>
+                <h1 class="hero-title mt-3 mb-2">Hello, {{ user.first_name|default:user.username }}</h1>
+                <p class="text-muted-light mb-0">A clean PocketPay dashboard for balances, transfers, and recent activity.</p>
+            </div>
+            <a href="{% url 'send_money' %}" class="btn btn-glow btn-lg">Send Money</a>
+        </div>
+        <div class="balance-amount mt-4">{{ wallet.balance }}</div>
+        <div class="balance-meta dashboard-summary-grid">
+            <div><span class="meta-label">Username</span><span class="meta-value">{{ user.username }}</span></div>
+            <div><span class="meta-label">Wallet Balance</span><span class="meta-value">{{ wallet.balance }}</span></div>
+            <div><span class="meta-label">Status</span><span class="meta-value">{{ wallet_status }}</span></div>
+        </div>
+    </section>
+
+    <section class="row g-4 mb-4">
+        <div class="col-md-4">
+            <div class="stat-card gradient-card animated-card h-100">
+                <span class="stat-label">Wallet Balance</span>
+                <div class="stat-value">{{ wallet.balance }}</div>
+                <div class="stat-subtitle">Available funds</div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="stat-card gradient-card alt animated-card h-100">
+                <span class="stat-label">Total Sent</span>
+                <div class="stat-value">{{ sent_total }}</div>
+                <div class="stat-subtitle">Lifetime transfers</div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="stat-card gradient-card animated-card h-100">
+                <span class="stat-label">Total Received</span>
+                <div class="stat-value">{{ received_total }}</div>
+                <div class="stat-subtitle">Lifetime incoming</div>
+            </div>
+        </div>
+    </section>
+
+    <section class="row g-4 mb-4">
+        <div class="col-lg-8">
+            <div class="glass-panel panel-card animated-card h-100 p-4 p-lg-5">
+                <div class="panel-head mb-4">
+                    <h2 class="panel-title mb-1">Quick Actions</h2>
+                    <p class="text-muted-light mb-0">Fast access to the most common PocketPay actions.</p>
+                </div>
+                <div class="quick-action-grid">
+                    <a class="quick-pay-row" href="{% url 'send_money' %}">
+                        <i class="bi bi-send-fill"></i>
+                        <span>
+                            <span class="d-block fw-semibold">Send Money</span>
+                            <span class="small text-muted-light">Transfer funds instantly</span>
+                        </span>
+                    </a>
+                    <a class="quick-pay-row" href="{% url 'history' %}">
+                        <i class="bi bi-clock-history"></i>
+                        <span>
+                            <span class="d-block fw-semibold">View History</span>
+                            <span class="small text-muted-light">Check previous transactions</span>
+                        </span>
+                    </a>
+                    <a class="quick-pay-row" href="{% url 'profile' %}">
+                        <i class="bi bi-person-circle"></i>
+                        <span>
+                            <span class="d-block fw-semibold">Profile</span>
+                            <span class="small text-muted-light">View account details</span>
+                        </span>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="glass-panel panel-card animated-card h-100 p-4 p-lg-5">
+                <div class="panel-head mb-4">
+                    <h2 class="panel-title mb-1">Activity</h2>
+                    <p class="text-muted-light mb-0">Small account overview.</p>
+                </div>
+                <div class="activity-mini-stack">
+                    <div class="mini-info-card">
+                        <span>Last transaction</span>
+                        <strong>
+                            {% if last_transaction %}
+                                {{ last_transaction.transaction_id }}
+                            {% else %}
+                                No transactions yet
+                            {% endif %}
+                        </strong>
+                    </div>
+                    <div class="mini-info-card">
+                        <span>Wallet status</span>
+                        <strong>{{ wallet_status }}</strong>
+                    </div>
+                    <div class="mini-info-card">
+                        <span>Active account</span>
+                        <strong>{{ active_account }}</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="glass-panel panel-card animated-card p-4 p-lg-5">
+        <div class="panel-head d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h2 class="panel-title mb-1">Recent Transactions</h2>
+                <p class="text-muted-light mb-0">Latest incoming and outgoing payments.</p>
+            </div>
+            <a class="btn btn-sm btn-outline-light" href="{% url 'history' %}">View All</a>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-borderless align-middle mb-0 glass-table">
+                <thead>
+                    <tr>
+                        <th>Receiver</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for tx in recent_transactions %}
+                        <tr>
+                            <td>
+                                {% if tx.sender_id == user.id %}
+                                    {{ tx.receiver.username }}
+                                {% else %}
+                                    {{ tx.sender.username }}
+                                {% endif %}
+                            </td>
+                            <td>{{ tx.amount }}</td>
+                            <td><span class="status-pill status-{{ tx.status }}">{{ tx.get_status_display }}</span></td>
+                            <td>{{ tx.timestamp|date:"M d, Y H:i" }}</td>
+                        </tr>
+                    {% empty %}
+                        <tr><td colspan="4" class="text-center text-muted-light py-4">No transactions yet.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+</div>
+{% endblock %}

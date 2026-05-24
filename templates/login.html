@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="auth-shell">
+    <div class="auth-visual glass-panel">
+        <div class="auth-badge">Modern fintech payments</div>
+        <h1 class="auth-title mt-4">Move money with a premium PocketPay experience.</h1>
+        <p class="auth-copy mt-3">Bright, clean, and fast. Designed like a modern fintech startup with smooth interactions and elegant motion.</p>
+        <div class="auth-stats mt-4">
+            <div><strong>Safe</strong><span>Secure transfers</span></div>
+            <div><strong>Fast</strong><span>Instant receipt flow</span></div>
+            <div><strong>Bright</strong><span>Pink + blue UI</span></div>
+        </div>
+    </div>
+    <div class="auth-form-wrap">
+        <div class="glass-panel auth-form-card p-4 p-lg-5">
+            <div class="mb-4">
+                <span class="eyebrow">Welcome back</span>
+                <h1 class="display-6 fw-bold mt-3 mb-0">Login to PocketPay</h1>
+            </div>
+            <form method="post" class="stack-form auth-form">
+                {% csrf_token %}
+                {% for field in form %}
+                    <div class="mb-3">
+                        <label class="form-label">{{ field.label }}</label>
+                        {{ field }}
+                        {% for error in field.errors %}<div class="text-danger small mt-1">{{ error }}</div>{% endfor %}
+                    </div>
+                {% endfor %}
+                {% if form.non_field_errors %}
+                    <div class="alert alert-danger glass-alert">{{ form.non_field_errors }}</div>
+                {% endif %}
+                <button class="btn btn-primary btn-lg w-100 mt-2 ripple" type="submit">Login</button>
+            </form>
+            <p class="mt-4 mb-0 text-center text-muted-light">Need an account? <a href="{% url 'register' %}">Register</a></p>
+        </div>
+    </div>
+</div>
+{% endblock %}

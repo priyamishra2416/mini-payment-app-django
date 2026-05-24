@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row g-4 mb-4">
+    <div class="col-md-3">
+        <div class="stat-card gradient-card animated-card h-100">
+            <span class="stat-label">Total Users</span>
+            <div class="stat-value">{{ total_users }}</div>
+            <div class="stat-subtitle">Registered accounts</div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="stat-card gradient-card alt animated-card h-100">
+            <span class="stat-label">Total Transactions</span>
+            <div class="stat-value">{{ total_transactions }}</div>
+            <div class="stat-subtitle">All payments</div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="stat-card gradient-card animated-card h-100">
+            <span class="stat-label">Money Transferred</span>
+            <div class="stat-value">{{ total_money_transferred }}</div>
+            <div class="stat-subtitle">Successful volume</div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="stat-card gradient-card alt animated-card h-100">
+            <span class="stat-label">Recent Payments</span>
+            <div class="stat-value">{{ recent_payments|length }}</div>
+            <div class="stat-subtitle">Latest activity</div>
+        </div>
+    </div>
+</div>
+
+<div class="glass-panel panel-card animated-card">
+    <div class="panel-head d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="panel-title mb-1">Recent Payments</h2>
+            <p class="text-muted-light mb-0">Staff-level overview of the most recent transfers.</p>
+        </div>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-borderless align-middle mb-0 glass-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Sender</th>
+                    <th>Receiver</th>
+                    <th>Amount</th>
+                    <th>Status</th>
+                    <th>Time</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for tx in recent_payments %}
+                    <tr>
+                        <td>{{ tx.transaction_id }}</td>
+                        <td>{{ tx.sender.username }}</td>
+                        <td>{{ tx.receiver.username }}</td>
+                        <td>{{ tx.amount }}</td>
+                        <td><span class="status-pill status-{{ tx.status }}">{{ tx.get_status_display }}</span></td>
+                        <td>{{ tx.timestamp|date:"M d, Y H:i" }}</td>
+                    </tr>
+                {% empty %}
+                    <tr><td colspan="6" class="text-center text-muted-light py-4">No payments yet.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

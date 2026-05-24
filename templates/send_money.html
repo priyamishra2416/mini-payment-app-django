@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-7 col-xl-6">
+        <div class="glass-panel transfer-card animated-card p-4 p-lg-5">
+            <div class="d-flex justify-content-between align-items-start gap-3 mb-4">
+                <div>
+                    <span class="eyebrow">Transfer funds</span>
+                    <h1 class="hero-title mt-3 mb-2">Send money securely</h1>
+                    <p class="text-muted-light mb-0">Choose a receiver, enter the amount, and confirm instantly.</p>
+                </div>
+                <div class="transfer-icon"><i class="bi bi-send-fill"></i></div>
+            </div>
+            <form method="post" class="stack-form transfer-form">
+                {% csrf_token %}
+                {{ form.submission_token }}
+                <div class="mb-3">
+                    <label class="form-label">Receiver</label>
+                    {{ form.receiver }}
+                    {% for error in form.receiver.errors %}<div class="text-danger small mt-1">{{ error }}</div>{% endfor %}
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Amount</label>
+                    {{ form.amount }}
+                    {% for error in form.amount.errors %}<div class="text-danger small mt-1">{{ error }}</div>{% endfor %}
+                </div>
+                {% if form.non_field_errors %}
+                    <div class="alert alert-danger glass-alert">{{ form.non_field_errors }}</div>
+                {% endif %}
+                {% if form.errors and not form.non_field_errors %}
+                    <div class="alert alert-danger glass-alert">Please fix the highlighted fields.</div>
+                {% endif %}
+                <button class="btn btn-glow btn-lg w-100 loading-btn" type="submit">
+                    <span class="btn-text">Transfer Money</span>
+                    <span class="btn-loader spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8 col-xl-7">
+        <div class="glass-panel qr-page-card animated-card p-4 p-lg-5">
+            <div class="row g-4 align-items-center">
+                <div class="col-lg-6">
+                    <span class="eyebrow">QR Payment</span>
+                    <h1 class="hero-title mt-3 mb-3">Your payment QR</h1>
+                    <p class="text-muted-light mb-4">Share this QR for simulated PocketPay transfers. It contains your payment ID.</p>
+                    <div class="payment-id-pill">{{ payment_id }}</div>
+                    <div class="mt-4">
+                        <div class="small text-muted-light mb-2">Wallet details</div>
+                        <div class="info-stack">
+                            <div><span>Username</span><strong>{{ user.username }}</strong></div>
+                            <div><span>Balance</span><strong>{{ wallet.balance }}</strong></div>
+                            <div><span>Joined</span><strong>{{ user.date_joined|date:"M d, Y" }}</strong></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="qr-display-shell">
+                        <div id="qrCode" class="qr-box large" data-payment-id="{{ payment_id }}"></div>
+                        <div class="qr-caption mt-3">Scan to pay</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

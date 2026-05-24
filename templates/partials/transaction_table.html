@@ -1,0 +1,38 @@
+<div class="table-responsive">
+    <table class="table table-borderless align-middle mb-0 glass-table">
+        <thead>
+            <tr>
+                <th>Transaction</th>
+                <th>Counterparty</th>
+                <th>Amount</th>
+                <th>Status</th>
+                <th>Time</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for tx in transactions %}
+                <tr>
+                    <td>{{ tx.transaction_id }}</td>
+                    <td>
+                        {% if type == 'sent' %}
+                            {{ tx.receiver.username }}
+                        {% elif type == 'received' %}
+                            {{ tx.sender.username }}
+                        {% else %}
+                            {% if tx.sender_id == user.id %}
+                                {{ tx.receiver.username }}
+                            {% else %}
+                                {{ tx.sender.username }}
+                            {% endif %}
+                        {% endif %}
+                    </td>
+                    <td>{{ tx.amount }}</td>
+                    <td><span class="status-pill status-{{ tx.status }}">{{ tx.get_status_display }}</span></td>
+                    <td>{{ tx.timestamp|date:"M d, Y H:i" }}</td>
+                </tr>
+            {% empty %}
+                <tr><td colspan="5" class="text-center text-muted-light py-4">No transactions to display.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
